@@ -1,0 +1,40 @@
+{% extends "quest/base.html" %}
+{% block title %}クエスト{% endblock %}
+{% block main %} <h1>クエスト</h1>
+<div id="form-area">
+<p></p>
+</div>
+
+<div id="entries-area">
+  <h2>受理しているクエスト</h2>
+  <div class="entry">
+{% if quest_progress_list %}
+{% for quest_progress in quest_progress_list %}
+    <h3>{{ quest_progress.quest.name }}</h3>
+    <p>達成度：{{ quest_progress.progress }}/100
+    <form action="{% url quest_advance %}" method="POST">{% csrf_token %}
+    <input type="hidden" name="quest_progress" value="{{ quest_progress.id }}"/>
+    <button type="submit">進行</button>
+    </form>
+    </p>
+{% endfor %} </div>
+{% else %}
+現在受理しているクエストはありません
+{% endif %}
+</div>
+
+
+<div id="entries-area">
+  <h2>見受理のクエスト</h2>
+  <div class="entry">
+{% for quest in quest_list %}
+    <h3>{{ quest.name }}</h3>
+    <p>{{ quest.description|linebreaksbr }}
+    <form action="{% url quest_accept %}" method="POST">{% csrf_token %}
+    <input type="hidden" name="quest" value="{{ quest.id }}" />
+    <button type="submit">受理</button>
+    </form>
+    </p>
+{% endfor %} </div>
+</div>
+{% endblock %}
